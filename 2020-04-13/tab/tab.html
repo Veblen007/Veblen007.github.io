@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin:0;
+            padding:0
+        }
+        #view{
+            width: 480px;
+            margin:800px auto;
+        }
+
+        #big_pic{
+            position: relative;
+            height:270px
+        }
+        #big_pic:hover{
+            cursor: crosshair;
+        }
+        .imgs img{
+            position: absolute;
+            top:0;
+            left:0;
+            width:100%;
+            opacity: 0;
+            transition: all .5s;
+        }
+        /* img属于行内块，会有默认间距 */
+        #small_pic{
+            font-size:0;
+            margin-top:5px
+        }
+        #small_pic img{
+            width:96px;
+            padding:4px;
+            box-sizing:border-box;
+            transition:all .5s;
+        }
+        .con{
+            box-shadow: 0 5px 20px black;
+            transform: translateY(-5px);
+            border-radius: 10px;
+        }
+        #mark{
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.2);
+            position: absolute;
+            left:0;
+            top:0;
+            display: none;
+        }
+        #big_box{
+            width: 200px;
+            height:200px;
+            position: absolute;
+            top:0;
+            left:480px;
+            overflow: hidden;
+            display: none;
+        }
+        #big{
+            width:960px;
+            position:absolute
+        }
+    </style>
+</head>
+<body>
+    <div id="view">
+        <div id="big_pic">
+            <div class="imgs">
+                <img src="images/a.jpg" alt="">
+                <img src="images/b.jpg" alt="">
+                <img src="images/c.jpg" alt="">
+                <img src="images/d.jpg" alt="">
+                <img src="images/e.jpg" alt="">
+            </div>
+            <div id="mark"></div>
+            <div id="big_box">
+                <img id="big" src="images/a.jpg" alt="">
+            </div>
+        </div>
+        <div id="small_pic">
+            <img src="images/a.jpg" alt="">
+            <img src="images/b.jpg" alt="">
+            <img src="images/c.jpg" alt="">
+            <img src="images/d.jpg" alt="">
+            <img src="images/e.jpg" alt="">
+        </div>
+    </div>
+</body>
+<script>
+    var imgs=big_pic.children[0].children;
+    var btns=small_pic.children;
+    var x=0;
+    // 初始状态
+    imgs[x].style.opacity=1;
+    btns[x].className="con";
+
+
+    for(var i=0;i<btns.length;i++){
+        btns[i].index=i;
+        btns[i].onclick=function(){
+
+            // 之前显示大图慢慢变透明
+            imgs[x].style.opacity=0;
+            btns[x].className="";
+            // 与当前缩略图对应的大图慢慢显示
+            imgs[this.index].style.opacity=1;
+            // 切换放大img
+            big.src=this.src;
+            this.className="con";
+            // x记录当前显示哪一个
+            x=this.index;
+
+        }
+    }
+
+    // 鼠标移入移出
+    big_pic.onmouseover=function(){
+        mark.style.display="block";
+        big_box.style.display="block"
+    }
+
+    big_pic.onmouseout=function(){
+        mark.style.display="none";
+        big_box.style.display="none"
+    }
+
+    // 鼠标移动
+    big_pic.onmousemove=function(e){
+
+        // 滚动高度
+        var st=document.body.scrollTop||document.documentElement.scrollTop;
+        var y=st+e.clientY-this.offsetTop;
+        var x=e.clientX-this.offsetLeft;
+
+        // 边缘阀值
+        var level=100*1/2;
+
+        // 限制边缘位置
+        if(x<level){
+            x=level;
+        }
+        if(x>480-level){
+            x=480-level
+        }
+        if(y<level){
+            y=level;
+        }
+        if(y>270-level){
+            y=270-level
+        }
+
+
+        // +100指定点移动到容器中央
+        big.style.left=-x*2+100+"px";
+        big.style.top=-y*2+100+"px"
+
+        // 设置mark位置
+        mark.style.left=x-50+"px";
+        mark.style.top=y-50+"px"
+
+    }
+</script>
+</html>
